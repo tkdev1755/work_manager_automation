@@ -1,0 +1,45 @@
+meta {
+  name: 05 - Update Collection Item (CAUTION)
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{base_url}}/collections/{{collection_id}}/items
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{craft_token}}
+}
+
+body:json {
+  {
+    "itemsToUpdate": [
+      {
+        "id": "{{test_item_id}}",
+        "properties": {
+          "REPLACE_WITH_REAL_PROPERTY_KEY": "REPLACE_WITH_REAL_VALUE"
+        }
+      }
+    ]
+  }
+}
+
+docs {
+  SUPERSEDED for the core "mark applied" flow: request 06 showed a
+  collection item's `properties` are company-level aggregate counters
+  (offres_postules, etc.), not a per-offer toggle - the actual per-offer
+  state lives in nested task blocks, handled by request 09 instead
+  (PUT /blocks, not this endpoint).
+
+  Kept as a template in case you later want wm_automation to also
+  increment these aggregate counters (e.g. offres_postules) alongside
+  flipping the per-offer task block - not wired up, not needed yet.
+
+  WRITE request - mutates a real tracker row if you do run it. Set
+  `test_item_id` to a company id you're fine touching, and replace
+  REPLACE_WITH_* with a real property key/value from request 03's schema
+  first.
+}

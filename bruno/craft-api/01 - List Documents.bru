@@ -1,0 +1,26 @@
+meta {
+  name: 01 - List Documents
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{base_url}}/documents?fetchMetadata=false
+  body: none
+  auth: bearer
+}
+
+params:query {
+  fetchMetadata: false
+}
+
+auth:bearer {
+  token: {{craft_token}}
+}
+
+docs {
+  Discovery step 1: lists every document in this connection, with its id
+  and title. Find the job tracker document here, note its id - you don't
+  need it for the next steps (collections are looked up across the whole
+  connection), but it confirms the connection is scoped correctly.
+}

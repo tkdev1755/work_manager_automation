@@ -1,0 +1,44 @@
+meta {
+  name: 07 - Search Unchecked Offers
+  type: http
+  seq: 7
+}
+
+get {
+  url: {{base_url}}/blocks/search?documentId={{document_id}}&pattern=Commenc%C3%A9%20la%20candidature&beforeBlockCount=1&afterBlockCount=0&fetchBlocks=true
+  body: none
+  auth: bearer
+}
+
+params:query {
+  documentId: {{document_id}}
+  pattern: Commencé la candidature
+  beforeBlockCount: 1
+  afterBlockCount: 0
+  fetchBlocks: true
+}
+
+auth:bearer {
+  token: {{craft_token}}
+}
+
+docs {
+  Diagnostic, not the main approach anymore: request 06 showed the
+  checkbox's checked/unchecked state lives in a structured `taskInfo.state`
+  field, not literal "[ ]" characters in the block's text - that's almost
+  certainly why the earlier `\[ \]` pattern returned zero results (the
+  search index likely covers semantic text, not rendered markdown syntax).
+
+  This searches for the fixed phrase "Commencé la candidature" instead, to
+  check whether full-text search works at all here. Two things to look
+  for in the result: (1) does it return hits, confirming search indexes
+  this content; (2) does each hit's `blocks` (fetchBlocks=true) include
+  `taskInfo.state`, so you could still filter to "todo" ones from search
+  results instead of walking the whole tree (request 08).
+
+  This still won't generalize past companies using this exact French
+  phrasing, though - request 08's tree walk (filtering on taskInfo.state
+  directly) is the more robust approach and doesn't depend on wording.
+
+  Read-only, safe to run freely.
+}

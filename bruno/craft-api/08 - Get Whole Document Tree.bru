@@ -1,0 +1,40 @@
+meta {
+  name: 08 - Get Whole Document Tree
+  type: http
+  seq: 8
+}
+
+get {
+  url: {{base_url}}/blocks?id={{document_id}}&maxDepth=-1&fetchMetadata=false
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: {{document_id}}
+  maxDepth: -1
+  fetchMetadata: false
+}
+
+auth:bearer {
+  token: {{craft_token}}
+}
+
+docs {
+  Tests whether one call on the document root (not a single company) with
+  maxDepth=-1 returns all 76 companies AND their nested content (task
+  blocks included) in one response - confirmed for a single company by
+  request 06 (collectionItem -> content: [h2, richUrl, task, task, ...]).
+
+  If this works, fetch_new_offers() can walk this single tree instead of
+  76 separate calls: for each collectionItem in the collection's content,
+  scan its content list for text blocks with taskInfo.state == "todo",
+  and pair each with the nearest preceding richUrl block (same content
+  list) for the offer link.
+
+  Response may be large (76 companies x a handful of blocks each) - if it
+  gets unwieldy to paste back, just report the item count and whether the
+  nesting looks like request 06's shape, rather than the full JSON.
+
+  Read-only, safe to run freely.
+}

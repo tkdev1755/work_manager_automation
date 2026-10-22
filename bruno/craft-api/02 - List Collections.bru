@@ -1,0 +1,22 @@
+meta {
+  name: 02 - List Collections
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{base_url}}/collections
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{craft_token}}
+}
+
+docs {
+  Discovery step 2: lists every collection across the connection's
+  documents (id, name, itemCount, documentId). Find the tracker's
+  collection here, then set `collection_id` in the environment to its id
+  before running the next requests.
+}

@@ -1,0 +1,53 @@
+meta {
+  name: 09 - Flip Task Block (CAUTION)
+  type: http
+  seq: 9
+}
+
+put {
+  url: {{base_url}}/blocks
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{craft_token}}
+}
+
+body:json {
+  {
+    "blocks": [
+      {
+        "id": "{{test_block_id}}",
+        "markdown": "> - [x] Commencé la candidature ?"
+      }
+    ]
+  }
+}
+
+docs {
+  WRITE test - mutates a real block. Validates wm_automation.craft.tracker's
+  mark_started/mark_applied approach: PUT /blocks with the task block's id
+  and its markdown changed from "[ ]" to "[x]" - only `markdown` is
+  documented as writable for text blocks, taskInfo isn't, so this checks
+  whether Craft re-derives taskInfo.state from the markdown on write.
+
+  Pre-filled `test_block_id` default targets a REAL untouched offer -
+  its "Commencé la candidature ?" checklist block, confirmed still
+  todo as of the last full-document fetch. This is a real tracker entry,
+  not a throwaway - Craft's docs flag this as production data, and this
+  is only "safe" because it's reversible:
+
+  1. Run this request.
+  2. Run request 06 (or 08) again and check this block's taskInfo.state -
+     did it flip to "done"?
+  3. Revert immediately: re-run this same request with markdown changed
+     back to "> - [ ] Commencé la candidature ?" (edit the body above),
+     and confirm via 06/08 that it's back to "todo" - you haven't actually
+     started that application, so leaving it marked done would be wrong
+     data, not just a leftover test artifact.
+
+  Only after a successful flip + revert should pipeline.py's
+  mark_started/mark_applied calls (currently wrapped in a non-fatal
+  try/except in prepare_application/finalize_application) be trusted.
+}

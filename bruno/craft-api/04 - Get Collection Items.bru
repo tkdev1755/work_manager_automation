@@ -1,0 +1,31 @@
+meta {
+  name: 04 - Get Collection Items
+  type: http
+  seq: 4
+}
+
+get {
+  url: {{base_url}}/collections/{{collection_id}}/items?maxDepth=0
+  body: none
+  auth: bearer
+}
+
+params:query {
+  maxDepth: 0
+}
+
+auth:bearer {
+  token: {{craft_token}}
+}
+
+docs {
+  Discovery step 4: actual rows, with their `properties` object - confirms
+  the real values for the applied toggle (true/false? a select option like
+  "Not Started"/"Applied"?) and where the job title/company/URL actually
+  live (title field vs. a property vs. both).
+
+  maxDepth=0 skips nested page content under each item (fine for schema
+  discovery - not needed for the tracker's use case).
+
+  Read-only, safe to run freely.
+}

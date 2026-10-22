@@ -1,0 +1,40 @@
+meta {
+  name: 06 - Get Company Full Detail (Blocks)
+  type: http
+  seq: 6
+}
+
+get {
+  url: {{base_url}}/blocks?id={{company_item_id}}&maxDepth=-1&fetchMetadata=true
+  body: none
+  auth: bearer
+}
+
+params:query {
+  id: {{company_item_id}}
+  maxDepth: -1
+  fetchMetadata: true
+}
+
+auth:bearer {
+  token: {{craft_token}}
+}
+
+docs {
+  Discovery step 5 (corrected model): collection items here are one per
+  COMPANY, not one per job offer - offers live as nested blocks under each
+  company (job links + "- [ ] Commencé la candidature ?" checklist items),
+  and only some companies have them.
+
+  This fetches the full block tree (maxDepth=-1, no truncation) for one
+  company so we can see the real JSON `type`/`textStyle` of those checklist
+  items and their block ids - that's what decides whether "mark applied"
+  means flipping a dedicated `checked` field via PUT /blocks, or editing
+  markdown text (`- [ ]` -> `- [x]`).
+
+  Defaults to Linkedin's item id (small preview - "...and 1 more block"),
+  a good first sample since its preview already showed one offer + one
+  checklist item. Swap `company_item_id` to try others for a second data point.
+
+  Read-only, safe to run freely.
+}

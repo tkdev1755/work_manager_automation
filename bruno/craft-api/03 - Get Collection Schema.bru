@@ -1,0 +1,28 @@
+meta {
+  name: 03 - Get Collection Schema
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{base_url}}/collections/{{collection_id}}/schema?format=schema
+  body: none
+  auth: bearer
+}
+
+params:query {
+  format: schema
+}
+
+auth:bearer {
+  token: {{craft_token}}
+}
+
+docs {
+  Discovery step 3: the property keys (e.g. the "applied" toggle, the
+  posting URL) and their types/options for the tracker collection. This is
+  what fills in CRAFT_APPLIED_PROPERTY_KEY / CRAFT_URL_PROPERTY_KEY in
+  wm_automation - see src/wm_automation/craft/tracker.py.
+
+  Requires `collection_id` to be set in the environment (from step 2).
+}
